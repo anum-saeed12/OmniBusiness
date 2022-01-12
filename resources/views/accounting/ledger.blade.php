@@ -81,8 +81,8 @@
                                             <td>{{ $item->affiliate_name }}</td>
                                             <td>{{ $item->account_type }}</td>
                                             <td>{{ str_pad($item->transaction_id,6,0,STR_PAD_LEFT) }}</td>
-                                            <td class="text-center text-bold">{{ $item->ledger_entry_type=='debit'?"{$item->ledger_amount} {$currency}":'' }}</td>
-                                            <td class="text-center text-bold">{{ $item->ledger_entry_type=='credit'?"{$item->ledger_amount} {$currency}":'' }}</td>
+                                            <td class="text-center text-bold">{{ $item->ledger_entry_type=='debit' ? number_format($item->ledger_amount,2) . " {$currency}":'' }}</td>
+                                            <td class="text-center text-bold">{{ $item->ledger_entry_type=='credit' ? number_format($item->ledger_amount,2) . " {$currency}":'' }}</td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -99,8 +99,8 @@
                                     </tr>
                                     <tr>
                                         <td colspan="4"></td>
-                                        <td class="text-center text-bold">{{ $total_debit }} {{ $currency }}</td>
-                                        <td class="text-center text-bold">{{ $total_credit }} {{ $currency }}</td>
+                                        <td class="text-center text-bold">{{ number_format($total_debit,2) }} {{ $currency }}</td>
+                                        <td class="text-center text-bold">{{ number_format($total_credit,2) }} {{ $currency }}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="6">&nbsp;</td>
@@ -112,7 +112,7 @@
                                     <tr>
                                         <th colspan="4"></th>
                                         <td colspan="2" class="text-center text-bold">
-                                            {!! $total_debit - $total_credit !!} {{ $currency }}
+                                            {!! number_format($total_debit - $total_credit,2) !!} {{ $currency }}
                                         </td>
                                     </tr>
                                 </tbody>

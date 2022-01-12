@@ -18,7 +18,7 @@ class Purchase extends Model
 
     protected $table = 'purchase_orders';
     protected $fillable = ['client_id','purchase' , 'employee_id', 'invoice_id', 'quotation_id',
-        'supplier_name', 'tax_value', 'total_amount', 'updated_by'];
+        'supplier_name', 'tax_value', 'total_amount','original_amount', 'updated_by','due_date'];
 
     protected static function booted()
     {
