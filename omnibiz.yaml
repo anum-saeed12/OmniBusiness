@@ -1,0 +1,52 @@
+- pipeline: "Omnibiz AWS"
+  on: "CLICK"
+  refs:
+  - "refs/heads/master"
+  priority: "NORMAL"
+  always_from_scratch: true
+  auto_clear_cache: true
+  fail_on_prepare_env_warning: true
+  actions:
+  - action: "Execute: composer install"
+    type: "BUILD"
+    working_directory: "/buddy/omnibiz"
+    docker_image_name: "library/composer"
+    docker_image_tag: "latest"
+    execute_commands:
+    - "composer validate"
+    - "composer update"
+    - "composer install"
+    volume_mappings:
+    - "/:/buddy/omnibiz"
+    ignore_image_pull_failures: true
+    shell: "BASH"
+  - action: "Make Laravel Env File"
+    type: "BUILD"
+    working_directory: "/buddy/omnibiz"
+    docker_image_name: "library/ubuntu"
+    docker_image_tag: "20.04"
+    execute_commands:
+    - "make laravel-env-changes"
+    setup_commands:
+    - "apt-get update && apt-get -y install make git"
+    volume_mappings:
+    - "/:/buddy/omnibiz"
+    shell: "BASH"
+  - action: "Build Docker image"
+    type: "DOCKERFILE"
+    region: "us-east-2"
+    docker_image_tag: "${BUDDY_EXECUTION_BRANCH}-${BUDDY_EXECUTION_REVISION_SHORT}"
+    dockerfile_path: "docker/Dockerfile"
+    repository: "omnibiz-temp"
+    integration_hash: "Xv20qjMVWPe9GpjPbLywr4pRnJ"
+  - action: "Update docker with new image"
+    type: "SSH_COMMAND"
+    login: "ubuntu"
+    host: "3.141.11.141"
+    port: "22"
+    server_key: "secure!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.Sf6Za9oP6v1uhSnUwwTmvA=="
+    authentication_mode: "PRIVATE_KEY"
+    commands:
+    - "GIT_BRANCH=${BUDDY_EXECUTION_BRANCH} GIT_COMMIT_HASH=${BUDDY_EXECUTION_REVISION_SHORT} /home/ubuntu/update-docker.sh"
+    run_as_script: true
+    shell: "BASH"
