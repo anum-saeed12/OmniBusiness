@@ -25,19 +25,21 @@ class PurchaseOrderController extends Controller
         $purchases = $this->all
             ?
             Purchase::select('purchase_orders.*')
-                ->join('employees','employees.id','=','purchase_orders.employee_id')
+                ->leftJoin('employees','employees.id','=','purchase_orders.employee_id')
                 ->where('purchase_orders.client_id', $client_id)
-                ->orderBy('purchase_orders.id', 'DESC')
                 ->whereNull('employees.deleted_at')
+                ->orderBy('purchase_orders.id', 'DESC')
+                ->groupBy('purchase_orders.id')
                 ->with('items')
                 ->with('quotation')
             :
             Purchase::select('purchase_orders.*')
-                ->join('employees','employees.id','=','purchase_orders.employee_id')
+                ->leftJoin('employees','employees.id','=','purchase_orders.employee_id')
                 ->where('purchase_orders.client_id', $client_id)
                 ->where('purchase_orders.employee_id', null)
                 ->whereNull('employees.deleted_at')
                 ->orderBy('purchase_orders.id', 'DESC')
+                ->groupBy('purchase_orders.id')
                 ->with('items')
                 ->with('quotation');
 

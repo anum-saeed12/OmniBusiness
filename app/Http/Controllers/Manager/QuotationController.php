@@ -21,19 +21,21 @@ class QuotationController extends Controller
         $quotations = $this->all
             ?
             Quotation::select('quotations.*')
-                ->join('employees','employees.id','=','quotations.employee_id')
+                ->leftJoin('employees','employees.id','=','quotations.employee_id')
                 ->where('quotations.client_id', $client_id)
                 ->whereNull('employees.deleted_at')
                 ->orderBy('quotations.id', 'DESC')
+                ->groupBy('quotations.id')
                 ->with('items')
                 ->with('employee')
             :
             Quotation::select('quotations.*')
-                ->join('employees','employees.id','=','quotations.employee_id')
+                ->leftJoin('employees','employees.id','=','quotations.employee_id')
                 ->where('quotations.client_id', $client_id)
                 ->where('quotations.employee_id', null)
                 ->whereNull('employees.deleted_at')
                 ->orderBy('quotations.id', 'DESC')
+                ->groupBy('quotations.id')
                 ->with('items');
 
         # Checks for filters
