@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 02, 2021 at 08:11 PM
+-- Generation Time: Jan 12, 2022 at 05:17 PM
 -- Server version: 10.4.8-MariaDB
 -- PHP Version: 7.3.11
 
@@ -19,8 +19,26 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `omnibiz`
+-- Database: `omnibusiness`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `charts_of_accounting`
+--
+
+CREATE TABLE `charts_of_accounting` (
+  `id` int(11) NOT NULL,
+  `transaction_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `account_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `amount` decimal(13,2) NOT NULL,
+  `invoice_id` int(11) DEFAULT NULL,
+  `transaction` enum('credit','debit') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -31,31 +49,25 @@ SET time_zone = "+00:00";
 CREATE TABLE `clients` (
   `id` int(11) NOT NULL,
   `name` varchar(191) NOT NULL,
-  `address_1` varchar(191) NOT NULL,
-  `address_2` varchar(191) NOT NULL,
+  `address_1` varchar(191) DEFAULT NULL,
+  `address_2` varchar(191) DEFAULT NULL,
   `mobile` varchar(64) NOT NULL,
   `landline` varchar(16) DEFAULT NULL,
-  `official_email` varchar(191) DEFAULT NULL,
+  `official_email` varchar(191) NOT NULL,
+  `prefix` varchar(3) NOT NULL,
   `ntn_number` varchar(32) DEFAULT NULL,
   `avatar` varchar(255) DEFAULT NULL,
   `license` varchar(191) DEFAULT NULL,
   `website` varchar(191) DEFAULT NULL,
   `overview` varchar(1000) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 0,
+  `last_logged_in` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `updated_by` int(11) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `clients`
---
-
-INSERT INTO `clients` (`id`, `name`, `address_1`, `address_2`, `mobile`, `landline`, `official_email`, `ntn_number`, `avatar`, `license`, `website`, `overview`, `created_at`, `updated_at`, `updated_by`, `created_by`, `deleted_at`) VALUES
-(1, 'Apple', 'UK', 'UK', '03212345123', '0211345623', 'info@apple.com', '938467', 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1724px-Apple_logo_black.svg.png', '12345', 'https://apple.com', 'Everything Apple', '2021-05-01 10:33:38', '2021-06-12 16:58:32', NULL, NULL, NULL),
-(2, 'Microsoft', 'England', 'England', '03212345127', '0211345624', 'hello@microsoft.com', '394876', 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/1200px-Microsoft_logo.svg.png', '56789', 'https://microsoft.com', 'Everything Microsoft', '2021-05-01 10:33:38', '2021-06-12 16:58:40', NULL, NULL, NULL),
-(3, 'Facebook', 'Swedan', 'Swedan', '03212345120', '0211345626', 'info@facebook.com', '394879', 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/1200px-Microsoft_logo.svg.png', '56789', 'https://facebook.com', 'Everythin Facebook', '2021-05-01 10:33:38', '2021-06-12 16:58:49', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -70,16 +82,6 @@ CREATE TABLE `client_department` (
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `client_department`
---
-
-INSERT INTO `client_department` (`client_id`, `department_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, '2021-05-27 02:46:57', '2021-05-27 07:46:57', NULL),
-(1, 3, '2021-05-27 02:24:10', '2021-05-27 07:46:02', NULL),
-(1, 5, '2021-06-12 12:27:19', '2021-06-12 17:27:24', '2021-06-12 12:27:24'),
-(2, 3, '2021-05-27 02:24:10', '2021-05-27 07:46:02', NULL);
 
 -- --------------------------------------------------------
 
@@ -100,15 +102,6 @@ CREATE TABLE `companies` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `companies`
---
-
-INSERT INTO `companies` (`id`, `client_id`, `name`, `address_1`, `address_2`, `phone_num`, `personal_email`, `updated_at`, `created_at`, `deleted_at`) VALUES
-(3, 1, 'Mustafa sweets', 'uk', 'uk', '021234325423', 'mustafa@omni.com', NULL, '2021-06-20 12:07:05', NULL),
-(4, 1, 'lucky cement', 'uk', 'uk', '021234325423', 'Lucky_cemen@gmail.com', NULL, '2021-06-20 12:07:05', NULL),
-(5, 1, 'New Company', NULL, 'uk', '021234325423', 'NewCompany@gmail.com', '2021-06-22 18:27:02', '2021-06-20 12:07:05', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -122,17 +115,6 @@ CREATE TABLE `departments` (
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `departments`
---
-
-INSERT INTO `departments` (`id`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Management', '2021-05-11 11:00:23', '2021-05-26 16:54:08', NULL),
-(3, 'Human Resources', '2021-05-25 14:06:18', '2021-05-26 16:55:04', NULL),
-(4, 'hr', '2021-05-31 16:43:55', '2021-06-04 16:42:20', NULL),
-(5, 'anum saeed', '2021-06-12 12:27:19', '2021-06-12 12:34:18', '2021-06-12 12:34:18'),
-(6, 'dfvd', '2021-06-12 12:29:12', '2021-06-12 12:29:16', '2021-06-12 12:29:16');
 
 -- --------------------------------------------------------
 
@@ -155,41 +137,31 @@ CREATE TABLE `employees` (
   `working_time_end` time NOT NULL,
   `break_time_start` time NOT NULL,
   `break_time_end` time NOT NULL,
-  `salary` int(6) NOT NULL,
+  `salary` int(11) NOT NULL,
   `bank_account_no` bigint(20) NOT NULL,
   `nationality` varchar(512) NOT NULL,
-  `nic_no` bigint(13) NOT NULL,
+  `nic_no` bigint(20) NOT NULL,
   `gender` enum('female','male','','') NOT NULL,
-  `passport_no` bigint(13) DEFAULT NULL,
+  `passport_no` bigint(20) DEFAULT NULL,
   `birth_date` date NOT NULL,
   `birth_place` varchar(11) NOT NULL,
   `birth_country` varchar(11) NOT NULL,
   `martial_status` enum('single','married','','') NOT NULL,
   `children` int(11) DEFAULT NULL,
   `emergency_contact` char(11) NOT NULL,
-  `visa_number` int(8) DEFAULT NULL,
-  `working_permit_number` bigint(11) DEFAULT NULL,
+  `visa_number` int(11) DEFAULT NULL,
+  `working_permit_number` bigint(20) DEFAULT NULL,
   `visa_expire_date` date DEFAULT NULL,
   `education_level` enum('nothing','matriculation','intermediate','bachelor''s','master''s','doctorate') NOT NULL,
   `education_field` varchar(512) DEFAULT NULL,
   `educational_institute` varchar(512) DEFAULT NULL,
-  `income_tax` int(1) NOT NULL DEFAULT 5,
+  `income_tax` int(11) NOT NULL DEFAULT 5,
   `created_by` int(11) DEFAULT NULL,
   `updated_by` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `employees`
---
-
-INSERT INTO `employees` (`id`, `client_id`, `firstname`, `lastname`, `personal_email`, `picture`, `position_id`, `mobile_no`, `location`, `working_hours`, `working_time_start`, `working_time_end`, `break_time_start`, `break_time_end`, `salary`, `bank_account_no`, `nationality`, `nic_no`, `gender`, `passport_no`, `birth_date`, `birth_place`, `birth_country`, `martial_status`, `children`, `emergency_contact`, `visa_number`, `working_permit_number`, `visa_expire_date`, `education_level`, `education_field`, `educational_institute`, `income_tax`, `created_by`, `updated_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'Mubashir', 'Ahmed', 'mubashir123@gmai.com', 'dsggsgsgs', 2, '03212323232', 'bahria town', 9, '19:28:14', '00:00:00', '00:00:00', '00:00:00', 100000, 35235162462, 'pakistani', 4334221233423, 'male', 0, '1999-10-10', '', '', 'single', 0, '0', 0, 0, '0000-00-00', 'nothing', '', '', 5, 92, NULL, '2021-05-11 06:01:29', '2021-06-08 17:10:27', NULL),
-(2, 1, 'Bano', 'Bibi', 'banobibi@gmail.com', 'fdgdbhdet', 3, '03481320286', 'Azsgxdfhcfgjhkg', 0, '00:00:00', '00:00:00', '00:00:00', '00:00:00', 12242354, 122423523543435, 'pakistani', 1234512334567, 'female', 0, '2021-05-29', 'pakistan', 'pakistani', 'single', 0, '03481350226', 0, 0, '0000-00-00', 'nothing', '', '', 5, 92, NULL, '2021-05-11 06:04:24', '2021-06-12 13:16:12', NULL),
-(3, 1, 'Steve', 'Jobs', 'employee@personalemail.com', 'fdgdbhdet', 3, '0', '', 0, '00:00:00', '00:00:00', '00:00:00', '00:00:00', 0, 0, '', 0, 'female', 0, '2021-05-29', '', '', 'single', 0, '0', 0, 0, '0000-00-00', 'nothing', '', '', 5, 92, NULL, '2021-05-11 06:04:24', '2021-05-26 21:35:42', NULL),
-(4, 1, 'Faizan', 'Imran', 'faizanimran286@gmail.com', NULL, 3, '03211234567', 'sarab ghott', 9, '09:00:00', '20:00:00', '12:00:00', '13:00:00', 253325, 24356546697089, 'pakistani', 2435654669701, 'male', NULL, '1999-06-09', 'pakistan', 'pakistani', 'married', 0, '03481350283', NULL, NULL, NULL, 'bachelor\'s', 'Computer Science', 'Bahria University', 5, NULL, NULL, '2021-06-08 11:50:12', '2021-06-09 07:23:46', NULL);
 
 -- --------------------------------------------------------
 
@@ -202,19 +174,14 @@ CREATE TABLE `invoices` (
   `client_id` int(11) DEFAULT NULL,
   `employee_id` int(11) DEFAULT NULL,
   `product_supplier_and_buyer` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
-  `total_amount` int(11) NOT NULL,
-  `updated_by` int(1) DEFAULT NULL,
+  `discount` varchar(6) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `original_amount` double(13,2) NOT NULL,
+  `total_amount` double(13,2) NOT NULL,
+  `updated_by` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `invoices`
---
-
-INSERT INTO `invoices` (`id`, `client_id`, `employee_id`, `product_supplier_and_buyer`, `total_amount`, `updated_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, NULL, 'Mini Mart', 1285, NULL, '2021-06-27 07:20:10', '2021-06-27 07:20:10', NULL);
 
 -- --------------------------------------------------------
 
@@ -227,20 +194,15 @@ CREATE TABLE `invoice_items` (
   `invoice_id` int(11) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL,
   `quantity` int(11) NOT NULL,
-  `unit_price` int(11) NOT NULL,
-  `total_price` int(11) NOT NULL,
+  `discount` tinyint(4) NOT NULL DEFAULT 0,
+  `original_unit_price` double(13,2) NOT NULL,
+  `original_total_price` double(13,2) NOT NULL,
+  `unit_price` double(13,2) NOT NULL,
+  `total_price` double(13,2) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `invoice_items`
---
-
-INSERT INTO `invoice_items` (`id`, `invoice_id`, `product_id`, `quantity`, `unit_price`, `total_price`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(36, 1, 31, 3, 45, 135, '2021-06-27 07:20:10', '2021-06-27 07:20:10', NULL),
-(37, 1, 7, 46, 25, 1150, '2021-06-27 07:20:10', '2021-06-27 07:20:10', NULL);
 
 -- --------------------------------------------------------
 
@@ -257,16 +219,24 @@ CREATE TABLE `job_positions` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `job_positions`
+-- Table structure for table `ledgers`
 --
 
-INSERT INTO `job_positions` (`id`, `title`, `department_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Cashier', 3, '2021-05-11 11:01:10', '2021-05-26 16:57:08', NULL),
-(2, 'Admin', 1, '2021-05-11 11:01:02', '2021-05-27 12:00:12', NULL),
-(3, 'Accountant', 3, '2021-05-11 11:00:53', '2021-05-27 12:00:25', NULL),
-(7, 'manager', 3, '2021-05-11 11:00:53', '2021-06-04 17:19:51', NULL),
-(8, 'Ghareeb Awam', 1, '2021-06-23 03:28:44', '2021-06-23 03:30:28', '2021-06-23 03:30:28');
+CREATE TABLE `ledgers` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `transaction_id` int(11) NOT NULL,
+  `account_type` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ledger_entry_type` enum('credit','debit') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ledger_amount` decimal(13,2) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -280,23 +250,11 @@ CREATE TABLE `products` (
   `name` varchar(191) NOT NULL,
   `unit` enum('lb','g','kg','ton','ml','lt','pc') NOT NULL DEFAULT 'kg',
   `in_stock` int(11) NOT NULL,
+  `unit_price` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `products`
---
-
-INSERT INTO `products` (`id`, `client_id`, `name`, `unit`, `in_stock`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(7, 1, 'chickpeas', 'kg', 373, '2021-05-10 21:48:21', '2021-06-27 06:08:18', NULL),
-(25, 1, 'cheesy', 'ton', 45, '2021-05-11 05:28:48', '2021-05-30 22:08:09', NULL),
-(26, 1, 'Ketchup', 'ton', 170, '2021-05-11 07:41:24', '2021-06-19 02:23:26', NULL),
-(27, 2, 'Tomato', 'kg', 1343, '2021-05-27 12:57:04', '2021-06-12 21:38:12', NULL),
-(28, 1, 'Biryani Masala', 'kg', 563, '2021-06-10 13:19:54', '2021-06-10 13:19:54', NULL),
-(29, 1, 'chilli', 'ton', 7, '2021-06-12 14:10:03', '2021-06-12 14:10:03', NULL),
-(31, 1, 'Tomato', 'kg', 6, '2021-06-12 16:47:19', '2021-06-27 06:08:18', NULL);
 
 -- --------------------------------------------------------
 
@@ -313,17 +271,6 @@ CREATE TABLE `product_categories` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `product_categories`
---
-
-INSERT INTO `product_categories` (`id`, `client_id`, `title`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(3, 1, 'dry product', '2021-05-10 23:40:10', '2021-06-12 19:12:52', NULL),
-(4, 2, 'Electric Product', '2021-05-10 18:40:48', '2021-06-10 17:44:00', NULL),
-(7, 1, 'Vegetables', '2021-05-10 19:03:41', '2021-05-27 17:56:20', NULL),
-(8, 1, 'spice', '2021-05-11 07:42:25', '2021-05-27 07:26:01', NULL),
-(9, 1, 'Fruits', '2021-05-27 11:07:27', '2021-06-10 13:14:44', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -338,18 +285,6 @@ CREATE TABLE `product_categories_assigned` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `product_categories_assigned`
---
-
-INSERT INTO `product_categories_assigned` (`category_id`, `product_id`, `updated_at`, `created_at`, `deleted_at`) VALUES
-(3, 7, NULL, '2021-06-12 19:06:26', NULL),
-(7, 26, '2021-05-27 07:26:26', '2021-05-11 07:41:24', NULL),
-(7, 27, '2021-05-27 12:57:04', '2021-05-27 12:57:04', NULL),
-(7, 31, '2021-06-12 16:47:19', '2021-06-12 16:47:19', NULL),
-(8, 28, '2021-06-10 19:26:23', '2021-06-10 13:19:54', NULL),
-(8, 29, '2021-06-12 14:10:03', '2021-06-12 14:10:03', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -357,29 +292,24 @@ INSERT INTO `product_categories_assigned` (`category_id`, `product_id`, `updated
 --
 
 CREATE TABLE `purchase_orders` (
-  `id` int(16) NOT NULL,
+  `id` int(11) NOT NULL,
   `purchase` varchar(32) NOT NULL,
   `client_id` int(11) NOT NULL,
   `employee_id` int(11) DEFAULT NULL,
   `invoice_id` int(11) DEFAULT NULL,
   `quotation_id` int(11) DEFAULT NULL,
-  `supplier_name` varchar(191) NOT NULL,
-  `tax_value` smallint(2) NOT NULL,
-  `total_amount` float NOT NULL,
+  `supplier_name` varchar(191) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `tax_value` smallint(6) NOT NULL,
+  `discount` varchar(6) NOT NULL DEFAULT '0',
+  `original_amount` double(13,2) NOT NULL,
+  `total_amount` double(13,2) NOT NULL,
   `due_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `delivered_at` timestamp NULL DEFAULT NULL,
   `updated_by` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `purchase_orders`
---
-
-INSERT INTO `purchase_orders` (`id`, `purchase`, `client_id`, `employee_id`, `invoice_id`, `quotation_id`, `supplier_name`, `tax_value`, `total_amount`, `due_date`, `updated_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '', 1, NULL, NULL, 15, 'Anchor Mart', 5, 17204, '2021-05-30 22:05:51', NULL, '2021-05-30 17:05:51', '2021-05-30 17:05:51', NULL),
-(2, '', 1, NULL, NULL, 10, 'Mustafa sweets', 5, 500000, '2021-05-30 22:06:01', NULL, '2021-05-30 17:06:01', '2021-05-30 17:06:01', NULL);
 
 -- --------------------------------------------------------
 
@@ -388,24 +318,19 @@ INSERT INTO `purchase_orders` (`id`, `purchase`, `client_id`, `employee_id`, `in
 --
 
 CREATE TABLE `purchase_order_line` (
-  `id` int(16) NOT NULL,
+  `id` int(11) NOT NULL,
   `product_id` int(11) DEFAULT NULL,
-  `purchase_id` int(16) DEFAULT NULL,
-  `quantity` int(16) NOT NULL,
+  `purchase_id` int(11) DEFAULT NULL,
+  `quantity` int(11) NOT NULL,
+  `discount` tinyint(4) NOT NULL DEFAULT 0,
+  `original_unit_price` double(13,2) NOT NULL,
+  `original_total_price` double(13,2) NOT NULL,
   `unit_price` float NOT NULL,
   `total_price` float NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `purchase_order_line`
---
-
-INSERT INTO `purchase_order_line` (`id`, `product_id`, `purchase_id`, `quantity`, `unit_price`, `total_price`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 25, 1, 5, 100000, 345325, '2021-05-30 17:06:01', '2021-06-24 19:13:54', NULL),
-(2, 25, 2, 5, 100000, 345325, '2021-05-30 17:06:01', '2021-06-24 19:13:54', NULL);
 
 -- --------------------------------------------------------
 
@@ -418,9 +343,11 @@ CREATE TABLE `quotations` (
   `client_id` int(11) DEFAULT NULL,
   `employee_id` int(11) DEFAULT NULL,
   `company` varchar(191) COLLATE utf8_unicode_ci NOT NULL,
-  `total_amount` int(11) NOT NULL,
+  `discount` decimal(2,2) NOT NULL DEFAULT 0.00,
+  `original_amount` double(13,2) NOT NULL DEFAULT 0.00,
+  `total_amount` double(13,2) NOT NULL,
   `quotation_type` enum('rcvd','sent') COLLATE utf8_unicode_ci NOT NULL,
-  `gst` int(2) NOT NULL,
+  `gst` int(11) NOT NULL,
   `updated_by` int(11) DEFAULT NULL,
   `rejected_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -428,20 +355,6 @@ CREATE TABLE `quotations` (
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `quotations`
---
-
-INSERT INTO `quotations` (`id`, `client_id`, `employee_id`, `company`, `total_amount`, `quotation_type`, `gst`, `updated_by`, `rejected_at`, `created_at`, `accepted_at`, `updated_at`, `deleted_at`) VALUES
-(10, 1, 2, 'Mustafa sweets', 200000, 'rcvd', 5, 92, NULL, '2021-05-14 15:37:00', '2021-05-13 19:00:00', '2021-06-11 09:18:51', NULL),
-(14, 1, 1, 'lucky cement', 70000, 'sent', 5, 92, '2021-05-12 19:00:00', '2021-05-14 15:37:00', NULL, '2021-06-11 18:24:35', NULL),
-(15, 1, 2, 'Anchor Mart', 50000, 'rcvd', 5, NULL, '2021-05-11 19:00:00', '2021-05-29 15:53:50', NULL, '2021-06-11 18:24:32', NULL),
-(16, 1, 1, 'imtiaz dha', 8900, 'sent', 5, NULL, NULL, '2021-05-29 15:54:23', '2020-03-31 19:00:00', '2021-06-22 14:33:45', NULL),
-(17, 1, 2, 'New Company', 308933, 'sent', 5, NULL, NULL, '2021-05-30 17:10:52', NULL, '2021-06-11 18:23:53', NULL),
-(18, 1, NULL, 'Bahria', 165049, 'sent', 5, NULL, NULL, '2021-06-12 04:13:19', NULL, '2021-06-20 09:41:33', NULL),
-(19, 1, NULL, 'New Company', 43605, 'rcvd', 5, NULL, NULL, '2021-06-19 02:23:26', NULL, '2021-06-19 02:23:26', NULL),
-(20, 1, NULL, 'Mini Mart', 1285, 'sent', 5, NULL, NULL, '2021-06-27 06:08:18', '2021-06-25 19:00:00', '2021-06-27 11:08:48', NULL);
 
 -- --------------------------------------------------------
 
@@ -453,31 +366,17 @@ CREATE TABLE `quotation_items` (
   `id` int(11) NOT NULL,
   `quotation_id` int(11) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL,
+  `previous_quantity` int(11) DEFAULT NULL,
   `quantity` int(11) NOT NULL,
+  `discount` decimal(9,2) NOT NULL DEFAULT 0.00,
+  `original_unit_price` double(13,2) NOT NULL,
+  `original_total_price` double(13,2) NOT NULL,
   `unit_price` int(11) NOT NULL,
-  `total_price` float NOT NULL,
+  `total_price` double(13,2) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `quotation_items`
---
-
-INSERT INTO `quotation_items` (`id`, `quotation_id`, `product_id`, `quantity`, `unit_price`, `total_price`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(9, 10, 25, 40, 5000, 200000, '2021-05-14 15:37:00', '2021-05-30 22:09:26', NULL),
-(15, 14, 26, 5, 10000, 4543, '2021-05-14 15:37:00', '2021-05-30 18:17:15', NULL),
-(16, 14, 27, 34, 43, 1462, '2021-05-29 15:54:23', '2021-05-30 19:19:26', NULL),
-(17, 16, 7, 34, 43, 1462, '2021-05-29 15:54:23', '2021-05-30 18:07:09', NULL),
-(18, 17, 7, 45, 35, 1575, '2021-05-30 17:10:52', '2021-05-30 17:10:52', NULL),
-(19, 17, 26, 677, 454, 307358, '2021-05-30 17:10:52', '2021-05-30 17:10:52', NULL),
-(20, 18, 26, 35, 46, 1610, '2021-06-12 04:13:19', '2021-06-22 12:26:11', NULL),
-(21, 18, 7, 463, 353, 163439, '2021-06-12 04:13:19', '2021-06-22 12:26:14', NULL),
-(22, 19, 26, 57, 765, 43605, '2021-06-19 02:23:26', '2021-06-19 02:23:26', NULL),
-(23, 16, 29, 34, 43, 1462, '2021-05-29 15:54:23', '2021-05-30 18:07:09', NULL),
-(24, 20, 31, 3, 45, 135, '2021-06-27 06:08:18', '2021-06-27 06:08:18', NULL),
-(25, 20, 7, 46, 25, 1150, '2021-06-27 06:08:18', '2021-06-27 06:08:18', NULL);
 
 -- --------------------------------------------------------
 
@@ -486,30 +385,23 @@ INSERT INTO `quotation_items` (`id`, `quotation_id`, `product_id`, `quantity`, `
 --
 
 CREATE TABLE `sale_orders` (
-  `id` int(16) NOT NULL,
-  `sale` varchar(32) NOT NULL,
+  `id` int(11) NOT NULL,
+  `sale` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `client_id` int(11) NOT NULL,
   `employee_id` int(11) DEFAULT NULL,
   `invoice_id` int(11) DEFAULT NULL,
   `quotation_id` int(11) DEFAULT NULL,
-  `buyer_name` varchar(191) NOT NULL,
-  `tax_value` smallint(2) NOT NULL,
+  `buyer_name` varchar(191) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `tax_value` smallint(6) NOT NULL,
+  `discount` varchar(6) NOT NULL DEFAULT '0',
+  `original_amount` double(13,2) NOT NULL,
   `total_amount` float DEFAULT NULL,
   `due_date` timestamp NULL DEFAULT NULL,
+  `delivered_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `sale_orders`
---
-
-INSERT INTO `sale_orders` (`id`, `sale`, `client_id`, `employee_id`, `invoice_id`, `quotation_id`, `buyer_name`, `tax_value`, `total_amount`, `due_date`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '4aa7af59893346ff98ed17267bf163a5', 1, 1, NULL, 10, 'lucky cement', 5, 45000, '2021-05-30 21:35:05', '2021-05-15 17:55:26', '2021-05-15 17:55:26', NULL),
-(2, 'be7826b717c7424f905848526aeefae6', 1, NULL, NULL, 16, 'imtiaz', 5, 8900, '2021-07-30 05:36:34', '2021-05-30 17:36:34', '2021-05-30 17:36:34', NULL),
-(3, 'be7826b717c7424f905848526aeefae6', 1, NULL, NULL, 16, 'imtiaz', 5, 8900, '2021-06-26 17:23:22', '2021-05-30 17:36:34', '2021-05-30 17:36:34', NULL),
-(63, '050cc8e0c58d4538882251b2e9aa7ffe', 1, NULL, 1, 20, 'Mini Mart', 5, 1285, '2021-06-22 19:00:00', '2021-06-27 07:20:10', '2021-06-27 07:20:10', NULL);
 
 -- --------------------------------------------------------
 
@@ -518,28 +410,19 @@ INSERT INTO `sale_orders` (`id`, `sale`, `client_id`, `employee_id`, `invoice_id
 --
 
 CREATE TABLE `sale_order_line` (
-  `id` int(16) NOT NULL,
+  `id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
-  `sale_id` int(16) NOT NULL,
-  `quantity` int(16) NOT NULL,
+  `sale_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `discount` tinyint(4) NOT NULL DEFAULT 0,
+  `original_unit_price` double(13,2) NOT NULL,
+  `original_total_price` double(13,2) NOT NULL,
   `unit_price` float NOT NULL,
   `total_price` float DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `sale_order_line`
---
-
-INSERT INTO `sale_order_line` (`id`, `product_id`, `sale_id`, `quantity`, `unit_price`, `total_price`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 7, 1, 4, 5, 200, '2021-05-15 17:55:27', '2021-05-27 07:27:45', NULL),
-(2, 7, 2, 34, 43, 1462, '2021-05-31 13:22:55', '2021-06-26 09:16:03', NULL),
-(3, 7, 3, 34, 43, 1462, '2021-05-31 13:22:55', '2021-06-26 09:16:08', NULL),
-(74, 29, 3, 34, 43, 1462, '2021-05-31 13:22:55', '2021-06-26 09:16:08', NULL),
-(77, 31, 63, 3, 45, 135, '2021-06-27 07:20:10', '2021-06-27 07:20:10', NULL),
-(78, 7, 63, 46, 25, 1150, '2021-06-27 07:20:10', '2021-06-27 07:20:10', NULL);
 
 -- --------------------------------------------------------
 
@@ -548,22 +431,53 @@ INSERT INTO `sale_order_line` (`id`, `product_id`, `sale_id`, `quantity`, `unit_
 --
 
 CREATE TABLE `settings` (
-  `id` int(9) NOT NULL,
+  `id` int(11) NOT NULL,
   `setting` varchar(191) COLLATE utf8_unicode_ci NOT NULL,
   `value` varchar(191) COLLATE utf8_unicode_ci NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `settings`
+-- Table structure for table `subscription`
 --
 
-INSERT INTO `settings` (`id`, `setting`, `value`, `deleted_at`) VALUES
-(1, 'incometax', '17', NULL),
-(2, 'logo', 'http://omnibiz.com/public/images/newlogo2023.png', NULL),
-(3, 'sitename', 'Monalisa Biz', NULL),
-(4, 'gst', '5', NULL),
-(6, 'gst1', '51', '2021-06-12 12:20:50');
+CREATE TABLE `subscription` (
+  `id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `last_payment_date` timestamp NULL DEFAULT NULL,
+  `next_payment_date` timestamp NULL DEFAULT NULL,
+  `membership_start` date DEFAULT NULL,
+  `membership_end` date DEFAULT NULL,
+  `last_paid_amount` int(11) DEFAULT NULL,
+  `type_of_subscription` enum('yearly','monthly') COLLATE utf8_unicode_ci NOT NULL,
+  `approved` tinyint(4) NOT NULL DEFAULT 2 COMMENT '0=disapproved, 1=approved, 2=submitted',
+  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `receipt` varchar(300) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transactions`
+--
+
+CREATE TABLE `transactions` (
+  `id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `invoice_id` int(11) DEFAULT NULL,
+  `transaction_type` enum('sale','purchase') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tranaction_date` date DEFAULT NULL,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -578,7 +492,7 @@ CREATE TABLE `users` (
   `email` varchar(191) NOT NULL,
   `username` varchar(80) NOT NULL,
   `password` varchar(512) NOT NULL,
-  `user_role` enum('admin','client','manager','accountant','employee') NOT NULL DEFAULT 'employee',
+  `user_role` enum('super admin','admin','client','manager','accountant','employee') NOT NULL,
   `rights` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `updated_by` int(11) DEFAULT NULL,
@@ -589,23 +503,14 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `client_id`, `employee_id`, `email`, `username`, `password`, `user_role`, `rights`, `created_by`, `updated_by`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, NULL, NULL, 'admin@omnibiz.com', 'admin', '$2y$10$FLPSYJNo92ZYmIggxfJKSudh2H.4MBQXUv889jVh6HV4x.daq9w/6', 'admin', NULL, NULL, 1, 'mpdLlpZUcNm9S6QPq9oRGJULV7R1R6djU6O5T2ucYKXK9YJnk6uwTImYhCGj', '2021-04-28 15:45:25', '2021-06-19 20:33:50', NULL),
-(2, 1, NULL, 'client@omnibiz.com', 'client', '$2y$10$FLPSYJNo92ZYmIggxfJKSudh2H.4MBQXUv889jVh6HV4x.daq9w/6', 'client', NULL, NULL, NULL, 'DEZAUbFwAiCQ2A6QBKYVimQ5jCpxnwVXMtq6ufwOGijwXpBIRnQvBZK7gccz', '2021-05-11 06:01:29', '2021-05-26 17:39:02', NULL),
-(3, 1, 1, 'manager@omnibiz.com', 'manager', '$2y$10$FLPSYJNo92ZYmIggxfJKSudh2H.4MBQXUv889jVh6HV4x.daq9w/6', 'manager', NULL, NULL, NULL, 'ulvJGjlCWGlnlx6KF8xep7EaiSg3Yp8Kyvv1xlOj1cEoUlKDaZQ0NoiquDxy', '2021-05-11 06:04:24', '2021-05-27 18:53:26', NULL),
-(5, 1, 2, 'accountant@omnibiz.com', 'accountant', '$2y$10$FLPSYJNo92ZYmIggxfJKSudh2H.4MBQXUv889jVh6HV4x.daq9w/6', 'accountant', NULL, NULL, 1, NULL, '2021-05-25 20:03:43', '2021-06-09 03:25:37', NULL),
-(6, 1, 3, 'employee@omnibiz.com', 'employee', '$2y$10$FLPSYJNo92ZYmIggxfJKSudh2H.4MBQXUv889jVh6HV4x.daq9w/6', 'employee', NULL, NULL, NULL, 'eL91fLXwFtexCLGmyCOKpkeF7DGbwiFwKe4PDCcYNbbY08qYN1UfvlcYv9fg', '2021-05-25 20:03:43', '2021-05-27 18:48:06', NULL),
-(11, 3, NULL, 'anumsaeed286@gmail.com', 'testing1233', '$2y$10$kAtabF7J5xrmlbX.ig73QerJNsrU95/HLmgAlhcq4B4j7WSwrl9He', 'client', NULL, 1, 1, NULL, '2021-05-27 13:25:47', '2021-06-12 16:48:14', NULL),
-(12, 1, 4, 'faizanmanager@omnibiz.com', 'faizan12', '$2y$10$dOjoLHCMi/1TiuOnQ7TrtOkaZxDd/8dP17kBDT1ZcXMDdwQx0OeYO', 'manager', NULL, 1, 1, NULL, '2021-06-08 11:50:12', '2021-06-09 07:23:56', NULL),
-(13, 2, NULL, 'anued286@gmail.com', 'ano232', '$2y$10$PsIHSNel1AAaYPofVqdH/uY0JOSrB7T6bHJymm7cmx6oD/RFJwuoO', 'client', NULL, 1, 1, NULL, '2021-06-12 09:36:10', '2021-06-12 16:48:46', NULL),
-(14, NULL, NULL, 'anumsae453ed286@gmail.com', 'clie34534nt@omnibiz.com', '$2y$10$rDyuEc2Isv1D5uUZmIkk7...IiW7VRUGRxBt92MVW2q7nQlcPqX0G', 'accountant', NULL, 1, NULL, NULL, '2021-06-12 13:24:49', '2021-06-12 13:24:53', '2021-06-12 13:24:53');
-
---
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `charts_of_accounting`
+--
+ALTER TABLE `charts_of_accounting`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `clients`
@@ -626,6 +531,7 @@ ALTER TABLE `client_department`
 --
 ALTER TABLE `companies`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`),
   ADD KEY `clientidforeignkey` (`client_id`);
 
 --
@@ -664,6 +570,15 @@ ALTER TABLE `invoice_items`
 ALTER TABLE `job_positions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `dept_id_foreign_key` (`department_id`);
+
+--
+-- Indexes for table `ledgers`
+--
+ALTER TABLE `ledgers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `ledgers_user_id_foreign` (`user_id`),
+  ADD KEY `ledgers_client_id_foreign` (`client_id`),
+  ADD KEY `ledgers_transaction_id_foreign` (`transaction_id`);
 
 --
 -- Indexes for table `products`
@@ -746,6 +661,22 @@ ALTER TABLE `settings`
   ADD UNIQUE KEY `setting` (`setting`);
 
 --
+-- Indexes for table `subscription`
+--
+ALTER TABLE `subscription`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `client_id_foreign_key_subscription` (`client_id`);
+
+--
+-- Indexes for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `transactions_client_id_foreign` (`client_id`),
+  ADD KEY `transactions_user_id_foreign` (`user_id`),
+  ADD KEY `transactions_invoice_id_foreign` (`invoice_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -758,106 +689,130 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `charts_of_accounting`
+--
+ALTER TABLE `charts_of_accounting`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `clients`
 --
 ALTER TABLE `clients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `companies`
 --
 ALTER TABLE `companies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `invoices`
 --
 ALTER TABLE `invoices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `invoice_items`
 --
 ALTER TABLE `invoice_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `job_positions`
 --
 ALTER TABLE `job_positions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `ledgers`
+--
+ALTER TABLE `ledgers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `product_categories`
 --
 ALTER TABLE `product_categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `purchase_orders`
 --
 ALTER TABLE `purchase_orders`
-  MODIFY `id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `purchase_order_line`
 --
 ALTER TABLE `purchase_order_line`
-  MODIFY `id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `quotations`
 --
 ALTER TABLE `quotations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `quotation_items`
 --
 ALTER TABLE `quotation_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `sale_orders`
 --
 ALTER TABLE `sale_orders`
-  MODIFY `id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `sale_order_line`
 --
 ALTER TABLE `sale_order_line`
-  MODIFY `id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `subscription`
+--
+ALTER TABLE `subscription`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -896,13 +851,21 @@ ALTER TABLE `invoices`
 ALTER TABLE `invoice_items`
   ADD CONSTRAINT `invoice_id_fkkk` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `invoice_id_foreign_key` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`),
-  ADD CONSTRAINT `product_id_fk_iinvoice` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `product_id_fk_iinvoice` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 
 --
 -- Constraints for table `job_positions`
 --
 ALTER TABLE `job_positions`
   ADD CONSTRAINT `dept_id_foreign_key` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--
+-- Constraints for table `ledgers`
+--
+ALTER TABLE `ledgers`
+  ADD CONSTRAINT `ledgers_client_id_foreign` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ledgers_transaction_id_foreign` FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ledgers_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `products`
@@ -920,8 +883,8 @@ ALTER TABLE `product_categories`
 -- Constraints for table `product_categories_assigned`
 --
 ALTER TABLE `product_categories_assigned`
-  ADD CONSTRAINT `category_id_foreign_key` FOREIGN KEY (`category_id`) REFERENCES `product_categories` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `category_id_foreign_key` FOREIGN KEY (`category_id`) REFERENCES `product_categories` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `purchase_orders`
@@ -929,8 +892,8 @@ ALTER TABLE `product_categories_assigned`
 ALTER TABLE `purchase_orders`
   ADD CONSTRAINT `Client_fk` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `employeeidforeign_key` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `invoice_id_fkk` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `quotation_fk` FOREIGN KEY (`quotation_id`) REFERENCES `quotations` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `invoice_id_fkk` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`),
+  ADD CONSTRAINT `quotation_fk` FOREIGN KEY (`quotation_id`) REFERENCES `quotations` (`id`);
 
 --
 -- Constraints for table `purchase_order_line`
@@ -966,15 +929,29 @@ ALTER TABLE `sale_orders`
 -- Constraints for table `sale_order_line`
 --
 ALTER TABLE `sale_order_line`
-  ADD CONSTRAINT `product_id_fk` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `product_id_fk` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
   ADD CONSTRAINT `sale_id` FOREIGN KEY (`sale_id`) REFERENCES `sale_orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `subscription`
+--
+ALTER TABLE `subscription`
+  ADD CONSTRAINT `client_id_foreign_key_subscription` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`);
+
+--
+-- Constraints for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD CONSTRAINT `transactions_client_id_foreign` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `transactions_invoice_id_foreign` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `transactions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
-  ADD CONSTRAINT `client_id_foreign_key` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `employee_id_foreign_key` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `client_id_foreign_key` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `employee_id_foreign_key` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
