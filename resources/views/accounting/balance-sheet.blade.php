@@ -102,7 +102,7 @@
                                             </tr>
                                             <tr><td colspan="6">&nbsp;</td></tr>
                                             <tr style="border-top:1px solid #000;border-bottom:1px solid #000;">
-                                                <td class="pl-4">Total current assets</td>
+                                                <td class="pl-4">Total equity & liabilities</td>
                                                 <td class="text-bold">{{ number_format($ledger_credit,2) }} {{ $currency }}</td>
                                             </tr>
                                             </tbody>
