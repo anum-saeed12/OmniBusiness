@@ -45,15 +45,17 @@ class VendorController extends Controller
     }
     public function store(Request $request)
     {
+
         $request->validate([
             'name'       => 'required|min:4|unique:App\Models\Company',
             'address_1'  => 'required',
             'address_2'  => 'required',
             'phone_num'  => 'required',
-            'email'      => 'required',
+            'personal_email'=> 'required',
         ]);
 
-        $data = $request->all();
+        $data               = $request->all();
+        $data['client_id']  = Auth::user()->client_id;
         $vendor = new Company($data);
         $vendor->save() ;
         return redirect(

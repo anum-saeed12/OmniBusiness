@@ -28,22 +28,24 @@ class SaleOrderController extends Controller
         $sales = $this->all
             ?
             Sale::select('sale_orders.*')
-                ->join('employees','employees.id','=','sale_orders.employee_id')
+                ->leftJoin('employees','employees.id','=','sale_orders.employee_id')
                 ->where('sale_orders.client_id', $client_id)
                 ->where('sale_orders.due_date','!=',null)
                 ->where('sale_orders.quotation_id','!=',null)
                 ->orderBy('sale_orders.id', 'DESC')
+                ->groupBy('sale_orders.id')
                 ->whereNull('employees.deleted_at')
                 ->with('items')
                 ->with('quotation')
             :
             Sale::select('sale_orders.*')
-                ->join('employees','employees.id','=','sale_orders.employee_id')
+                ->leftJoin('employees','employees.id','=','sale_orders.employee_id')
                 ->where('sale_orders.client_id', $client_id)
                 ->where('sale_orders.due_date','!=',null)
                 ->where('sale_orders.quotation_id','!=',null)
                 ->where('sale_orders.employee_id', null)
                 ->whereNull('employees.deleted_at')
+                ->groupBy('sale_orders.id')
                 ->orderBy('id', 'DESC')
                 ->with('items')
                 ->with('quotation');

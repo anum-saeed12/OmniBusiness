@@ -32,7 +32,7 @@
                                 <div class="col-md-12">
                                     <label for="name">Product Name</label>
                                     <input type="text" name="name" class="form-control" id="name"
-                                           placeholder="Enter Product Name" value="{{ old('name', ucwords($product->name)) }}" required>
+                                           placeholder="Enter Product Name" value="{{ ucwords($product->name) }}" required>
                                     <div class="text-danger">@error('name'){{ $message }}@enderror</div>
                                 </div>
                             </div>
@@ -57,15 +57,15 @@
                                 <div class="col-md-12">
                                     <label for="in_stock" >Stock</label><br/>
                                     <input type="number" min='0' name="in_stock" class="form-control" id="in_stock"
-                                           placeholder="Enter Stock " value="{{ old('in_stock', $product->in_stock) }}" required>
+                                           placeholder="Enter Stock " value="{{ $product->in_stock}}" required>
                                     <div class="text-danger">@error('in_stock'){{ $message }}@enderror</div>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-12">
                                     <label for="in_stock" >Unit Price</label><br/>
-                                    <input type="number" min='0' name="in_stock" class="form-control" id="unit_price"
-                                           placeholder="Enter Price " value="{{ old('unit_price', $product->unit_price) }}" required>
+                                    <input type="number" min='0' name="unit_price" class="form-control" id="unit_price"
+                                           placeholder="Enter Price " value="{{ $product->unit_price }}" required>
                                     <div class="text-danger">@error('unit_price'){{ $message }}@enderror</div>
                                 </div>
                             </div>

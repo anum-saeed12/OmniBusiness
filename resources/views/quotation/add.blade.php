@@ -143,10 +143,10 @@
             .attr('id', 's-row-' + product_id);
 
         let col_quantity = $('<div></div>')
-            .attr('class', 'col-md-3');
+            .attr('class', 'col-md-4');
 
         let col_price = $('<div></div>')
-            .attr('class', 'col-md-3');
+            .attr('class', 'col-md-2');
 
         let col_total = $('<div></div>')
             .attr('class', 'col-md-3');
@@ -158,19 +158,19 @@
             .attr('class', 'col-md-1');
 
         let input_group_quantity = $("<div></div>")
-            .attr('class', 'input-group mb-3')
+            .attr('class', 'input-group input-group-sm mb-3')
             .attr('id', 's-qty-' + product_id);
 
         let input_group_price = $("<div></div>")
-            .attr('class', 'input-group mb-3')
+            .attr('class', 'input-group input-group-sm mb-3')
             .attr('id', 's-price-' + product_id);
 
         let input_group_discount = $("<div></div>")
-            .attr('class', 'input-group mb-3')
+            .attr('class', 'input-group input-group-sm mb-3')
             .attr('id', 's-discount-' + product_id);
 
         let input_group_total = $("<div></div>")
-            .attr('class', 'input-group mb-3');
+            .attr('class', 'input-group input-group-sm mb-3');
 
         let product = $("<div></div>").attr('class', 'input-group-prepend').html('<span class="input-group-text">' + product_name + '</span>')
         let input_product_id = $("<input />")
@@ -217,7 +217,7 @@
         let remove = $("<a></a>")
             .attr('href', '#')
             .attr('title', 'Remove item')
-            .attr('class', 'btn btn-danger d-lg-block')
+            .attr('class', 'btn btn-sm btn-danger d-lg-block')
             .attr('onclick', 'remove_product("'+product_id+'")')
             .html('<i class="fa fa-trash"></i> <span class="d-md-none d-lg-none">Remove ' + product_name + '</span>')
 

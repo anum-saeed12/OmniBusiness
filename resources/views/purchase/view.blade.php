@@ -62,8 +62,8 @@
                                 </div>
                             </form>
                             @if(in_array(auth()->user()->user_role, ['client','manager','employee']))
-                            <a href="{{ route('purchase.add.' . auth()->user()->user_role) }}" class="btn btn-success"><i class="fa fa-plus-circle mr-1"></i> Add New</a>
-                        @endif
+                                <a href="{{ route('purchase.add.' . auth()->user()->user_role) }}" class="btn btn-success"><i class="fa fa-plus-circle mr-1"></i> Add New</a>
+                            @endif
                         </div>
                     </div>
                     <div class="card-body table-responsive p-0">
@@ -129,6 +129,14 @@
                         </table>
                     </div>
                     @else
+
+                        @if(in_array(auth()->user()->user_role, ['client','manager','employee']))
+                            <div class="row">
+                                <div class="col text-right p-3">
+                                    <a href="{{ route('purchase.add.' . auth()->user()->user_role) }}" class="btn btn-success"><i class="fa fa-plus-circle mr-1"></i> Add New</a>
+                                </div>
+                            </div>
+                        @endif
                         <div class="results-not-found text-center">
                             <div class="msg">
                                 Oops

@@ -100,6 +100,14 @@
                             </p>
                         </a>
                     </li>
+                        <li class="nav-item">
+                        <a href="{{ route('job.list.' . auth()->user()->user_role) }}" class="nav-link">
+                            <i class="fas fa-building nav-icon"></i>
+                            <p>
+                                Job Position
+                            </p>
+                        </a>
+                    </li>
                 @endif
 
                 @if(auth()->user()->user_role == "client" || auth()->user()->user_role == "manager")

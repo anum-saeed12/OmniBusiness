@@ -117,6 +117,13 @@
                                     </table>
                                 </div>
                             @else
+                                @if(in_array(auth()->user()->user_role, ['client','manager','employee']))
+                                    <div class="row">
+                                        <div class="col text-right p-3">
+                                            <a href="{{ route('sale.add.'.auth()->user()->user_role) }}#nav-sale" class="btn btn-success"><i class="fa fa-plus-circle mr-1"></i> Add New</a>
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="results-not-found text-center">
                                     <div class="msg">
                                         Oops
@@ -177,6 +184,9 @@
                                             </div>
                                         </form>
                                     </div>
+                                    @if(in_array(auth()->user()->user_role, ['client','manager','employee']))
+                                        <a href="{{ route('sale.add.'.auth()->user()->user_role) }}" class="btn btn-success"><i class="fa fa-plus-circle mr-1"></i> Add New</a>
+                                    @endif
                                 </div>
                                 <div class="card-body table-responsive p-0">
                                     <table class="table table-hover text-nowrap table-compact" id="table">
@@ -245,6 +255,13 @@
                                     </table>
                                 </div>
                             @else
+                                @if(in_array(auth()->user()->user_role, ['client','manager','employee']))
+                                    <div class="row">
+                                        <div class="col text-right p-3">
+                                            <a href="{{ route('sale.add.'.auth()->user()->user_role) }}#nav-pos" class="btn btn-success"><i class="fa fa-plus-circle mr-1"></i> Add New</a>
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="results-not-found text-center">
                                     <div class="msg">
                                         Oops

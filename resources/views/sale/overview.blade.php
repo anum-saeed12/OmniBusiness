@@ -45,6 +45,9 @@
                                 <h3 class="card-title">
                                     <i class="fas fa-chart-pie mr-1"></i>
                                     Sales
+                                    @if(in_array(auth()->user()->user_role, ['client','manager','employee']))
+                                        <a href="{{ route('sale.add.'.auth()->user()->user_role) }}" class="btn btn-sm ml-2 btn-success"><i class="fa fa-plus-circle mr-1"></i> Add New</a>
+                                    @endif
                                 </h3>
                                 <div class="card-tools">
                                     <ul class="nav nav-pills ml-auto">

@@ -20,46 +20,49 @@
 @stop
 
 @section('content')
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                @if(session()->has('success'))
-                <div class="callout callout-success" style="color:green">
-                    {{ session()->get('success') }}
-                </div>
-                @endif
-                @if(session()->has('error'))
-                <div class="callout callout-danger" style="color:red">
-                    {{ session()->get('error') }}
-                </div>
-                @endif
-                <div class="card">
-                    <div class="row mb-3 mt-3 ml-3">
-                        <div class="col-md-6">
-                            <form action="" method="GET" id="perPage">
-                                <label for="perPageCount">Show</label>
-                                <select id="perPageCount" name="count" onchange="$('#perPage').submit();"
-                                        class="input-select mx-2">
-                                    <option value="15"{{ request('count')=='15'?' selected':'' }}>15 rows</option>
-                                    <option value="25"{{ request('count')=='25'?' selected':'' }}>25 rows</option>
-                                    <option value="50"{{ request('count')=='50'?' selected':'' }}>50 rows</option>
-                                    <option value="100"{{ request('count')=='100'?' selected':'' }}>100 rows</option>
-                                </select>
-                            </form>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    @if(session()->has('success'))
+                        <div class="callout callout-success" style="color:green">
+                            {{ session()->get('success') }}
                         </div>
-                        <div class="row offset-md-3 col-md-3">
-                            <form method="Get" action="">
-                                <div class="input-group">
-                                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder=" Search" class="form-control"
-                                           aria-label="Search">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-secondary" type="submit"><i
-                                                class="fas fa-search"></i>
-                                        </button>
+                    @endif
+                    @if(session()->has('error'))
+                        <div class="callout callout-danger" style="color:red">
+                            {{ session()->get('error') }}
+                        </div>
+                    @endif
+                    <div class="card">
+                        <div class="row mb-3 mt-3 ml-3">
+                            <div class="col-md-6">
+                                <form action="" method="GET" id="perPage">
+                                    <label for="perPageCount">Show</label>
+                                    <select id="perPageCount" name="count" onchange="$('#perPage').submit();"
+                                            class="input-select mx-2">
+                                        <option value="15"{{ request('count')=='15'?' selected':'' }}>15 rows</option>
+                                        <option value="25"{{ request('count')=='25'?' selected':'' }}>25 rows</option>
+                                        <option value="50"{{ request('count')=='50'?' selected':'' }}>50 rows</option>
+                                        <option value="100"{{ request('count')=='100'?' selected':'' }}>100 rows</option>
+                                    </select>
+                                </form>
+                            </div>
+                            <div class="col-md-6 text-right pr-md-4">
+                                <form method="Get" action="" style="display:inline-block;vertical-align:top;" class="mr-2">
+                                    <div class="input-group">
+                                        <input type="text" id="myInput" onkeyup="myFunction()" placeholder=" Search" class="form-control"
+                                               aria-label="Search">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-secondary" type="submit"><i
+                                                    class="fas fa-search"></i>
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            </form>
+                                </form>
+                            @if(in_array(auth()->user()->user_role, ['client','manager']))
+                                <a href="{{ route('job.add.'.auth()->user()->user_role) }}" class="btn btn-success"><i class="fa fa-plus-circle mr-1"></i> Add New</a>
+                            @endif
                         </div>
                     </div>
                     <div class="card-body table-responsive p-0">

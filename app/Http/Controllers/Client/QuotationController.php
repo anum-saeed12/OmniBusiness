@@ -18,21 +18,32 @@ class QuotationController extends Controller
         $client_id = Auth::user()->client_id;
         $quotations = $this->all
             ?
-            Quotation::select('quotations.*')
-                ->join('employees','employees.id','=','quotations.employee_id')
+           Quotation::select('quotations.*')
+                ->leftJoin('employees','employees.id','=','quotations.employee_id')
                 ->where('quotations.client_id', $client_id)
                 ->whereNull('employees.deleted_at')
                 ->orderBy('quotations.id', 'DESC')
+                ->groupBy('quotations.id')
                 ->with('items')
                 ->with('employee')
             :
             Quotation::select('quotations.*')
-                ->join('employees','employees.id','=','quotations.employee_id')
+                ->leftJoin('employees','employees.id','=','quotations.employee_id')
                 ->where('quotations.client_id', $client_id)
                 ->where('quotations.employee_id', null)
                 ->whereNull('employees.deleted_at')
                 ->orderBy('quotations.id', 'DESC')
+                ->groupBy('quotations.id')
                 ->with('items');
+      /*      Quotation::where('client_id', $client_id)
+                ->orderBy('id', 'DESC')
+                ->with('items')
+                ->with('employee')
+            :
+            Quotation::where('client_id', $client_id)
+                ->where('employee_id', null)
+                ->orderBy('id', 'DESC')
+                ->with('items');*/
 
         # Checks for filters
         $this->employee_id && $quotations->where('employee_id', $this->employee_id);
@@ -113,10 +124,14 @@ class QuotationController extends Controller
             else
             {
                 // Checks if product is in stock
-                if ($fetch_product->in_stock < intval($product['quantity']))
+                if (
+                    $fetch_product->in_stock < intval($product['quantity']) &&
+                    $request->quotation_type == 'sent'
+                )
                 {
+                    $product_existing_quantity = $product['quantity'];
                     return redirect()->back()
-                        ->with('error', "\"{$fetch_product->name}\" does not have stock of \"{$product->quantity}\"!")
+                        ->with('error', "\"{$fetch_product->name}\" does not have stock of \"{$product_existing_quantity}\"!")
                         ->with('products', $request->products);
                 }
             }

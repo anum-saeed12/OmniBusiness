@@ -90,7 +90,21 @@
                                         <td>{{ $client->client->prefix }}</td>
                                         <td>{{ $client->client->landline }}</td>
                                         <td>{{ $client->client->official_email }}</td>
-                                        <td>{!! !empty($client->client->subscription[count($client->client->subscription)-1]->next_payment_date)?'<span class="c-tt" style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Payment date: '.\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $client->client->subscription[count($client->client->subscription)-1]->next_payment_date)->toFormattedDateString().'">Due In '.\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $client->client->subscription[count($client->client->subscription)-1]->next_payment_date)->diffInDays().' days</span>':"Full paid" !!}</td>
+                                        <td>
+                                            @if($client->client->subscription[count($client->client->subscription)-1]->next_payment_date)
+                                                <span class="c-tt" style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Payment date: {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $client->client->subscription[count($client->client->subscription)-1]->next_payment_date)->toFormattedDateString() }}">
+                                                    @if($client->client->subscription[count($client->client->subscription)-1]->next_payment_date >= \Carbon\Carbon::now())
+                                                        Due In {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $client->client->subscription[count($client->client->subscription)-1]->next_payment_date)->diffInDays() }} days
+                                                    @else
+                                                        <span class="text-bold text-danger">
+                                                            Due {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $client->client->subscription[count($client->client->subscription)-1]->next_payment_date)->diffInDays() }} days ago
+                                                        </span>
+                                                    @endif
+                                                </span>
+                                            @else
+                                                Full paid
+                                            @endif
+                                        </td>
                                         <td>
                                             @if($client->client->active == 1)
                                                 <span class="text-bold text-success"><i class="text-success"></i>Activated</span><br/>
