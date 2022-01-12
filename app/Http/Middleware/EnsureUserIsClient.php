@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +25,8 @@ class EnsureUserIsClient
         # 3rd step: Checks if the client is logging in first time or not
         if (empty(Auth::user()->client->last_logged_in)) return redirect(route('first.login.client'));
         # 4th step: Checks if the client is active and has paid the charges
-        #if (Auth::user()->client->subscription[0]->next < $today || Auth::user()->client->active == 0) return redirect(route('approval.unpaid'));
+        if (Auth::user()->client->active == 0) return redirect(route('approval.wait'));
+        if (Auth::user()->client->subscription[0]->next_payment_date < Carbon::now()) return redirect(route('approval.unpaid'));
         # If everything went perfect
         return $next($request);
     }

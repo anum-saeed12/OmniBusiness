@@ -201,10 +201,13 @@ class ClientController extends Controller
             ->whereNull('membership_end')
             ->whereNull('last_paid_amount')
             ->whereNotNull('receipt')
+            ->orderBy('id','DESC')
             ->firstOrFail();
+
+
         $subscription = Subscription::find($subscription->id);
         $subscription->membership_start = Carbon::today();
-        $subscription->membership_end = $subscription->type=='yearly'?Carbon::today()->addYear():Carbon::today()->addMonth();
+        $subscription->membership_end = $subscription->type_of_subscription=='yearly'?Carbon::today()->addYear():Carbon::today()->addMonth();
         $subscription->last_paid_amount = $request->amount;
         $subscription->approved = 1;
         $subscription->save();
