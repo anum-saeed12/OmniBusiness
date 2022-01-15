@@ -186,9 +186,9 @@ class PurchaseOrderController extends Controller
             'quotation_id' => 'required',
             'due_date'     => 'required'
         ],
-            [
-                'quotation_id.required' => 'The quotation field is required.'
-            ]);
+        [
+            'quotation_id.required' => 'The quotation field is required.'
+        ]);
 
         $due_date = Carbon::createFromTimeStamp(strtotime($request->due_date))->format('Y-m-d');
         $quotation = Quotation::where('client_id', Auth::user()->client_id)
@@ -201,7 +201,7 @@ class PurchaseOrderController extends Controller
         $new_purchase['supplier_name'] = $quotation->company;
         $new_purchase['tax_value']     = $quotation->gst;
         $new_purchase['total_amount']  = $quotation->total_amount;
-        $new_sale['original_amount']     = $quotation->original_amount;
+        $new_purchase['original_amount'] = $quotation->original_amount;
         $new_purchase['due_date']      = $due_date;
         $new_purchase = new Purchase($new_purchase);
         $new_purchase->save();

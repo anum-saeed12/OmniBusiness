@@ -159,8 +159,8 @@ class QuotationController extends Controller
 
             # Checks if the quotation type is "rcvd"; Substract from stock quantity if not "rcvd"
             $previous_quantity = intval($product->db->in_stock);
-            $request->quotation_type == 'rcvd' || $stock_remaining = $previous_quantity - intval($product->quantity);
-            $request->quotation_type == 'rcvd' || $updated = Product::where('id', $product->id)->update(['in_stock' => $stock_remaining]);
+            #$request->quotation_type == 'rcvd' || $stock_remaining = $previous_quantity - intval($product->quantity);
+            #$request->quotation_type == 'rcvd' || $updated = Product::where('id', $product->id)->update(['in_stock' => $stock_remaining]);
 
             $new_item['quotation_id']         = $quotation_id;
             $new_item['product_id']           = $product->id;

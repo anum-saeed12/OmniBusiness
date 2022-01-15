@@ -36,12 +36,15 @@ class AccountingController extends Controller
                 ELSE sale_orders.buyer_name
             END) as affiliate_name"),
         ];
+
+        $this->count=isset($request->count)?$this->count:200;
         $ledger_records = Ledger::select($select)
             ->leftJoin('transactions','transactions.id','=','ledgers.transaction_id')
             ->leftJoin('sale_orders','sale_orders.invoice_id','=','transactions.invoice_id')
             ->leftJoin('purchase_orders','purchase_orders.invoice_id','=','transactions.invoice_id')
             ->where('ledgers.client_id',Auth::user()->client_id)
-            ->orderBy('ledgers.created_at','ASC');
+            ->orderBy('ledgers.created_at','ASC')
+            ->orderBy('ledgers.id','ASC');
         # Get total credit
         $ledger_credit = Ledger::select([
                 DB::raw('SUM(ledgers.ledger_amount) as credit')
