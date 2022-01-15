@@ -16,26 +16,25 @@ use App\Http\Controllers\Controller;
 
 class ImportController extends Controller
 {
-    private $user_role;
     public function __construct(Request $request)
     {
         parent::__construct($request);
-        $this->user_role = Auth::user()->user_role;
     }
 
-    public function importproduct(Request $request)
+    public function importProduct(Request $request)
     {
         $request->validate([
             'productFile' => 'file'
         ]);
-        $file = $this->uploadFile($request->file('productsFile'));
+        $user_role = Auth::user()->user_role;
+        $file = $this->uploadFile($request->file('productFile'));
         $productImport = new ProductsImport();
         # Start Excel Upload
         $imported = Excel::import($productImport, $file);
 
         $batch_id = $productImport->batch_id;
 
-        return redirect(route("product.review.{$this->user_role}", $batch_id));
+        return redirect(route("product.review.{$user_role}", $batch_id));
     }
 
     public function uploadFile($file)
@@ -64,11 +63,12 @@ class ImportController extends Controller
     public function approve(Request $request)
     {
         $request->validate([
-            'batch_id' => 'required|exists:App\Models\Importedproduct,batch_id',
+            'batch_id' => 'required|exists:App\Models\ImportedProducts,batch_id',
         ]);
         $imported_products = ImportedProducts::where('batch_id', $request->batch_id)->get();
 
         $client_id = Auth::user()->client_id;
+        $user_role = Auth::user()->user_role;
 
         $categories = [];
         $brands = [];
@@ -160,7 +160,7 @@ class ImportController extends Controller
             'updated' => $updated
         ];
 
-        return redirect(route("product.list.{$this->user_role}"))->with('success', 'Import successful!')->with('stats', $data);
+        return redirect(route("product.list.{$user_role}"))->with('success', 'Import successful!')->with('stats', $data);
     }
 
     /*public function exportproduct()

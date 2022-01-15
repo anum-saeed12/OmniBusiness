@@ -213,7 +213,7 @@ Route::prefix('/client')->middleware('client')->group(function(){
             Route::get('/delete/{id}', '\App\Http\Controllers\Client\ProductCategoryController@delete')->name('category.delete.client');
         });
 
-        Route::post('/import', '\App\Http\Controllers\Common\ImportController@importItem')->name('product.import.client');
+        Route::post('/import', '\App\Http\Controllers\Common\ImportController@importProduct')->name('product.import.client');
         #Route::get('/export', '\App\Http\Controllers\Common\ImportController@exportItem')->name('product.export');
         Route::post('/import/approve', '\App\Http\Controllers\Common\ImportController@approve')->name('product.approve.client');
         Route::get('/import/{id}', '\App\Http\Controllers\Common\ImportController@viewImport')->name('product.review.client');
@@ -337,7 +337,7 @@ Route::prefix('/manager')->middleware('manager')->group(function(){
         Route::get('/{id}', '\App\Http\Controllers\Manager\ProductController@view')->name('product.view.manager');
         Route::get('/overview/{id}', '\App\Http\Controllers\Manager\ProductController@overview')->name('product.overview.manager');
 
-        Route::post('/import', '\App\Http\Controllers\Common\ImportController@importItem')->name('product.import.manager');
+        Route::post('/import', '\App\Http\Controllers\Common\ImportController@importProduct')->name('product.import.manager');
         #Route::get('/export', '\App\Http\Controllers\Common\ImportController@exportItem')->name('product.export');
         Route::post('/import/approve', '\App\Http\Controllers\Common\ImportController@approve')->name('product.approve.manager');
         Route::get('/import/{id}', '\App\Http\Controllers\Common\ImportController@viewImport')->name('product.review.manager');
