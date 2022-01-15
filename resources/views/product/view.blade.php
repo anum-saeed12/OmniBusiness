@@ -50,7 +50,7 @@
                         </div>
                         <div class="col-md-6 text-right pr-md-4">
                             <form method="Get" action="" style="display:inline-block;vertical-align:top;" class="mr-2">
-                                <div class="input-group">
+                                <div class="input-group input-group-sm">
                                     <input type="text" id="myInput" onkeyup="myFunction()" placeholder=" Search" class="form-control"
                                            aria-label="Search">
                                     <div class="input-group-append">
@@ -60,7 +60,17 @@
                                     </div>
                                 </div>
                             </form>
-                            <a href="{{ route('product.add.'.auth()->user()->user_role) }}" class="btn btn-success "><i class="fa fa-plus-circle mr-1"></i> Add New</a>
+                            <a href="{{ route('product.add.'.auth()->user()->user_role) }}" class="btn btn-sm btn-success"><i class="fa fa-plus-circle mr-1"></i> Add New</a>
+                            @if(in_array(auth()->user()->user_role,['client']))
+                                <form action="{{ route('product.import.'.auth()->user()->user_role) }}" method="post" enctype="multipart/form-data" style="display:inline;" id="importProductForm">
+                                    @csrf
+                                    <label class="btn btn-primary btn-sm ml-2 mb-0" for="importProductFile">
+                                        <input style="display:none;" type="file" id="importProductFile" name="productFile" onchange="$('#importProductForm').submit()"/>
+                                        <i class="fas fa-file-import"></i>
+                                        Import
+                                    </label>
+                                </form>
+                            @endif
                         </div>
                     </div>
                     <div class="card-body table-responsive p-0">
