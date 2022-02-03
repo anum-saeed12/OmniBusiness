@@ -17,6 +17,10 @@ Route::get('/', function () {
     return view('home');
 })->name('landing');
 
+Route::get('/pay', function(){
+    return view('paypal');
+})->name('paypal');
+
 // Auth routes
 Route::get('/login', '\App\Http\Controllers\AuthController@login')->name('login');
 Route::post('/login', '\App\Http\Controllers\AuthController@attemptLogin')->name('auth.login');

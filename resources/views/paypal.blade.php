@@ -102,6 +102,128 @@
 
 <main id="main">
 
+    <!-- ======= Paypal Section ======= -->
+    <section id="pricing" class="pricing">
+        <div class="container" data-aos="fade-up">
+
+            <div class="section-title">
+                <h2>Pricing</h2>
+                <h3><span>Subscribe</span> Now</h3>
+                <p>We offer monthly and yearly packages to help you get started with OmniBiz. These packages include all our services for your business at affordable prices</p>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="box">
+                        <h3>Product as a Service</h3>
+                        <h4><sup>$</sup>3,000<span> / year</span></h4>
+                        <ul>
+                            <li>All 4 systems included</li>
+                            <li>24/7 customer support</li>
+                        </ul>
+
+                        <div id="paypal-button-container-yearly"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 mt-6 mt-md-0" data-aos="fade-up" data-aos-delay="200">
+                    <div class="box featured">
+                        <h3>Product as a Service</h3>
+                        <h4><sup>$</sup>100<span> / month</span></h4>
+                        <ul>
+                            <li>All 4 systems included</li>
+                            <li>24/7 customer support</li>
+                        </ul>
+
+                        <div id="paypal-button-container-monthly"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <script src="https://www.paypal.com/sdk/js?client-id=sb&enable-funding=venmo&currency=USD" data-sdk-integration-source="button-factory"></script>
+            <script>
+                function initPayPalMonthlyButton() {
+                    paypal.Buttons({
+                        style: {
+                            shape: 'rect',
+                            color: 'white',
+                            layout: 'vertical',
+                            label: 'pay',
+
+                        },
+
+                        createOrder: function(data, actions) {
+                            return actions.order.create({
+                                purchase_units: [{"description":"OmniBiz Managerial Solution Subscription Monthly","amount":{"currency_code":"USD","value":100}}]
+                            });
+                        },
+
+                        onApprove: function(data, actions) {
+                            return actions.order.capture().then(function(orderData) {
+
+                                // Full available details
+                                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+
+                                // Show a success message within this page, e.g.
+                                const element = document.getElementById('paypal-button-container-monthly');
+                                element.innerHTML = '';
+                                element.innerHTML = '<h3>Thank you for your payment!</h3>';
+
+                                // Or go to another URL:  actions.redirect('thank_you.html');
+
+                            });
+                        },
+
+                        onError: function(err) {
+                            console.log(err);
+                        }
+                    }).render('#paypal-button-container-monthly');
+                }
+                function initPayPalYearlyButton() {
+                    paypal.Buttons({
+                        style: {
+                            shape: 'rect',
+                            color: 'white',
+                            layout: 'vertical',
+                            label: 'pay',
+
+                        },
+
+                        createOrder: function(data, actions) {
+                            return actions.order.create({
+                                purchase_units: [{"description":"OmniBiz Managerial Solution Subscription Yearly","amount":{"currency_code":"USD","value":3000}}]
+                            });
+                        },
+
+                        onApprove: function(data, actions) {
+                            return actions.order.capture().then(function(orderData) {
+
+                                // Full available details
+                                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+
+                                // Show a success message within this page, e.g.
+                                const element = document.getElementById('paypal-button-container-yearly');
+                                element.innerHTML = '';
+                                element.innerHTML = '<h3>Thank you for your payment!</h3>';
+
+                                // Or go to another URL:  actions.redirect('thank_you.html');
+
+                            });
+                        },
+
+                        onError: function(err) {
+                            console.log(err);
+                        }
+                    }).render('#paypal-button-container-yearly');
+                }
+                initPayPalMonthlyButton();
+                initPayPalYearlyButton();
+            </script>
+        </div>
+    </section>
+    <!-- End Paypal Section -->
+
     <!-- ======= Featured Services Section ======= -->
     <section id="featured-services" class="featured-services">
         <div class="container" data-aos="fade-up">
@@ -147,8 +269,8 @@
         </div>
     </section><!-- End Featured Services Section -->
 
-     <!-- ======= Services Section ======= -->
-     <section id="services" class="services">
+    <!-- ======= Services Section ======= -->
+    <section id="services" class="services">
         <div class="container" data-aos="fade-up">
 
             <div class="section-title">
@@ -302,7 +424,7 @@
                         OmniBiz. is one-in-all Business Solution for small businesses. We empower our customers
                         all around the world to start and grow their businesses with our smart business technology and
                         support.<br>Founded in 2020 and headquarted in Karachi, OmniBiz. is 100% founder owned and highly
-                         profitable.
+                        profitable.
                     </p>
                 </div>
             </div>
@@ -448,7 +570,7 @@
                     <p>
                         <i class="bx bxs-quote-alt-left quote-icon-left"></i>
                         As an Entrepreneur you are always looking for cheaper and efficient systems. OmniBiz. was one of my
-                         greatest decisions to start my business with
+                        greatest decisions to start my business with
                         <i class="bx bxs-quote-alt-right quote-icon-right"></i>
                     </p>
                 </div>
@@ -475,60 +597,60 @@
 
             <div class="row">
                 <div class="teamrow">
-                <div class="col-lg-4 col-md-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
-                    <div class="member">
-                        <div class="member-img">
-                            <img src="assets/img/team/team-2.jpg" class="img-fluid" alt="">
-                            <div class="social">
-                                <a href=""><i class="icofont-twitter"></i></a>
-                                <a href=""><i class="icofont-facebook"></i></a>
-                                <a href=""><i class="icofont-instagram"></i></a>
-                                <a href=""><i class="icofont-linkedin"></i></a>
+                    <div class="col-lg-4 col-md-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
+                        <div class="member">
+                            <div class="member-img">
+                                <img src="assets/img/team/team-2.jpg" class="img-fluid" alt="">
+                                <div class="social">
+                                    <a href=""><i class="icofont-twitter"></i></a>
+                                    <a href=""><i class="icofont-facebook"></i></a>
+                                    <a href=""><i class="icofont-instagram"></i></a>
+                                    <a href=""><i class="icofont-linkedin"></i></a>
+                                </div>
+                            </div>
+                            <div class="member-info">
+                                <h4>Anum Saeed</h4>
+                                <span>Chief Executive Office</span>
                             </div>
                         </div>
-                        <div class="member-info">
-                            <h4>Anum Saeed</h4>
-                            <span>Chief Executive Office</span>
-                        </div>
                     </div>
-                </div>
 
-                <div class="col-lg-4 col-md-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="400">
-                    <div class="member">
-                        <div class="member-img">
-                            <img src="assets/img/team/team-4.jpg" class="img-fluid" alt="">
-                            <div class="social">
-                                <a href=""><i class="icofont-twitter"></i></a>
-                                <a href=""><i class="icofont-facebook"></i></a>
-                                <a href=""><i class="icofont-instagram"></i></a>
-                                <a href=""><i class="icofont-linkedin"></i></a>
+                    <div class="col-lg-4 col-md-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="400">
+                        <div class="member">
+                            <div class="member-img">
+                                <img src="assets/img/team/team-4.jpg" class="img-fluid" alt="">
+                                <div class="social">
+                                    <a href=""><i class="icofont-twitter"></i></a>
+                                    <a href=""><i class="icofont-facebook"></i></a>
+                                    <a href=""><i class="icofont-instagram"></i></a>
+                                    <a href=""><i class="icofont-linkedin"></i></a>
+                                </div>
+                            </div>
+                            <div class="member-info">
+                                <h4>Rahma Inam</h4>
+                                <span>Chief Operating Officer </span>
                             </div>
                         </div>
-                        <div class="member-info">
-                            <h4>Rahma Inam</h4>
-                            <span>Chief Operating Officer </span>
-                        </div>
                     </div>
-                </div>
 
-                <div class="col-lg-4 col-md-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="300">
-                    <div class="member">
-                        <div class="member-img">
-                            <img src="assets/img/team/team-3.jpg" class="img-fluid" alt="">
-                            <div class="social">
-                                <a href=""><i class="icofont-twitter"></i></a>
-                                <a href=""><i class="icofont-facebook"></i></a>
-                                <a href=""><i class="icofont-instagram"></i></a>
-                                <a href=""><i class="icofont-linkedin"></i></a>
+                    <div class="col-lg-4 col-md-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="300">
+                        <div class="member">
+                            <div class="member-img">
+                                <img src="assets/img/team/team-3.jpg" class="img-fluid" alt="">
+                                <div class="social">
+                                    <a href=""><i class="icofont-twitter"></i></a>
+                                    <a href=""><i class="icofont-facebook"></i></a>
+                                    <a href=""><i class="icofont-instagram"></i></a>
+                                    <a href=""><i class="icofont-linkedin"></i></a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="member-info">
-                            <h4>Faizan Imran</h4>
-                            <span>Cheif Technology Officer</span>
+                            <div class="member-info">
+                                <h4>Faizan Imran</h4>
+                                <span>Cheif Technology Officer</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-               </div>
             </div>
 
         </div>
