@@ -141,7 +141,7 @@
 
             </div>
 
-            <script src="https://www.paypal.com/sdk/js?client-id=sb&enable-funding=venmo&currency=USD" data-sdk-integration-source="button-factory"></script>
+            <script src="https://www.paypal.com/sdk/js?client-id=Afz2gYpJgdEd7QvSW038gCMc7QQOyfoJGm2buw5LBRJ7s8P2H5WCO0Do6IQ7DGprmNrBhtdgzFz-wJ-B&enable-funding=venmo&currency=USD" data-sdk-integration-source="button-factory"></script>
             <script>
                 function initPayPalMonthlyButton() {
                     paypal.Buttons({
