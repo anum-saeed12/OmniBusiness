@@ -98,7 +98,19 @@
                 <p>We offer monthly and yearly packages to help you get started with OmniBiz. These packages include all our services for your business at affordable prices</p>
             </div>
             <div class="row">
-                <div class="col-lg-6 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="col-lg-6 col-md-6 mb43" data-aos="fade-up" data-aos-delay="100">
+                    <div class="box">
+                        <h3>Hourly Subscription</h3>
+                        <h4><sup>$</sup>1<span> / hour</span></h4>
+                        <ul>
+                            <li>2 systems included</li>
+                            <li>No customer support</li>
+                        </ul>
+
+                        <div id="paypal-button-container-hourly"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
                     <div class="box">
                         <h3>Daily Subscription</h3>
                         <h4><sup>$</sup>100<span> / day</span></h4>
@@ -110,7 +122,7 @@
                         <div id="paypal-button-container-daily"></div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="col-lg-6 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
                     <div class="box">
                         <h3>Weekly Subscription</h3>
                         <h4><sup>$</sup>999<span> / week</span></h4>
@@ -122,8 +134,20 @@
                         <div id="paypal-button-container-weekly"></div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="box featured">
+                <div class="col-lg-6 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="box">
+                        <h3>2 Weeks Subscription</h3>
+                        <h4><sup>$</sup>998<span> / 2 week</span></h4>
+                        <ul>
+                            <li>All 4 systems included</li>
+                            <li>24/7 customer support</li>
+                        </ul>
+
+                        <div id="paypal-button-container-bi-weekly"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="500">
+                    <div class="box {{--featured--}}">
                         <h3>Monthly Subscription</h3>
                         <h4><sup>$</sup>1,900<span> / monthly</span></h4>
                         <ul>
@@ -134,7 +158,7 @@
                         <div id="paypal-button-container-monthly"></div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="col-lg-6 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="600">
                     <div class="box">
                         <h3>Yearly Subscription</h3>
                         <h4><sup>$</sup>3,000<span> / year</span></h4>
@@ -151,6 +175,44 @@
     </section>
     <script src="https://www.paypal.com/sdk/js?client-id=Afz2gYpJgdEd7QvSW038gCMc7QQOyfoJGm2buw5LBRJ7s8P2H5WCO0Do6IQ7DGprmNrBhtdgzFz-wJ-B&enable-funding=venmo&currency=USD" data-sdk-integration-source="button-factory"></script>
     <script>
+        function initPayPalHourlyButton() {
+            paypal.Buttons({
+                style: {
+                    shape: 'rect',
+                    color: 'white',
+                    layout: 'vertical',
+                    label: 'pay',
+
+                },
+
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{"description":"OmniBiz Managerial Solution Subscription Hourly","amount":{"currency_code":"USD","value":1}}]
+                    });
+                },
+
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(orderData) {
+
+                        // Full available details
+                        console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+
+                        // Show a success message within this page, e.g.
+                        const element = document.getElementById('paypal-button-container-hourly');
+                        element.innerHTML = '';
+                        element.innerHTML = '<h3>Thank you for your payment!</h3>';
+
+                        // Or go to another URL:  actions.redirect('thank_you.html');
+
+                    });
+                },
+
+                onError: function(err) {
+                    console.log(err);
+                    alert(err);
+                }
+            }).render('#paypal-button-container-hourly');
+        }
         function initPayPalDailyButton() {
             paypal.Buttons({
                 style: {
@@ -185,6 +247,7 @@
 
                 onError: function(err) {
                     console.log(err);
+                    alert(err);
                 }
             }).render('#paypal-button-container-daily');
         }
@@ -200,7 +263,7 @@
 
                 createOrder: function(data, actions) {
                     return actions.order.create({
-                        purchase_units: [{"description":"OmniBiz Managerial Solution Subscription Monthly","amount":{"currency_code":"USD","value":999}}]
+                        purchase_units: [{"description":"OmniBiz Managerial Solution Subscription Weekly","amount":{"currency_code":"USD","value":999}}]
                     });
                 },
 
@@ -222,8 +285,47 @@
 
                 onError: function(err) {
                     console.log(err);
+                    alert(err);
                 }
             }).render('#paypal-button-container-weekly');
+        }
+        function initPayPalBiWeeklyButton() {
+            paypal.Buttons({
+                style: {
+                    shape: 'rect',
+                    color: 'white',
+                    layout: 'vertical',
+                    label: 'pay',
+
+                },
+
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{"description":"OmniBiz Managerial Solution Subscription Bi-Weekly","amount":{"currency_code":"USD","value":998}}]
+                    });
+                },
+
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(orderData) {
+
+                        // Full available details
+                        console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+
+                        // Show a success message within this page, e.g.
+                        const element = document.getElementById('paypal-button-container-bi-weekly');
+                        element.innerHTML = '';
+                        element.innerHTML = '<h3>Thank you for your payment!</h3>';
+
+                        // Or go to another URL:  actions.redirect('thank_you.html');
+
+                    });
+                },
+
+                onError: function(err) {
+                    console.log(err);
+                    alert(err);
+                }
+            }).render('#paypal-button-container-bi-weekly');
         }
         function initPayPalMonthlyButton() {
             paypal.Buttons({
@@ -237,7 +339,7 @@
 
                 createOrder: function(data, actions) {
                     return actions.order.create({
-                        purchase_units: [{"description":"OmniBiz Managerial Solution Subscription Quarterly","amount":{"currency_code":"USD","value":1900}}]
+                        purchase_units: [{"description":"OmniBiz Managerial Solution Subscription Monthly","amount":{"currency_code":"USD","value":1900}}]
                     });
                 },
 
@@ -259,6 +361,7 @@
 
                 onError: function(err) {
                     console.log(err);
+                    alert(err);
                 }
             }).render('#paypal-button-container-monthly');
         }
@@ -296,11 +399,14 @@
 
                 onError: function(err) {
                     console.log(err);
+                    alert(err);
                 }
             }).render('#paypal-button-container-yearly');
         }
+        initPayPalHourlyButton();
         initPayPalDailyButton();
         initPayPalWeeklyButton();
+        initPayPalBiWeeklyButton();
         initPayPalMonthlyButton();
         initPayPalYearlyButton();
     </script>
